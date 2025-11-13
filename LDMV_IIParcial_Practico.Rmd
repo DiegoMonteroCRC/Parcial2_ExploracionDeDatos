@@ -1,0 +1,240 @@
+---
+title: "LDMV_IIParcial_Practico"
+author: "Luis Diego Montero Vargas"
+date: "2025-11-12"
+output: html_document
+---
+
+# Parcial II | Exploración de Datos
+
+### Profesor: Ronald Córdoba Vega
+
+Este dataset asignado lo quise investigar mas a fondo sobre que trata, significado de cada variable y origen de los datos.
+
+Encontre que corresponde a un estudio médico realizado en Sudáfrica con el propósito de analizar los factores de riesgo asociados a enfermedades coronarias. Cada registro representa un paciente y contiene información relacionada con sus características clínicas, hábitos y antecedentes familiares.
+
+#### Fuente: https://r-packages.io/datasets/SAHeart 
+
+### Significado de variables
+
+sbp - systolic blood pressure - integer  
+tobacco - cumulative tobacco (kg) - numeric  
+ldl - low density lipoprotein cholesterol - numeric  
+adiposity - a numeric vector - numeric  
+famhist - family history of heart disease, a factor with levels Absent Present - character  
+typea - type-A behavior - integer  
+obesity - a numeric vector - numeric  
+alcohol - current alcohol consumption - numeric  
+age - age at onset - integer  
+chd - response, coronary heart disease - integer  
+
+
+# A. Carga de datos
+
+El primer paso es importar el csv ya sabiendo el tipo de separador que posee
+```{r}
+datos<- read.csv("SAheart.csv", sep = ";")
+```
+
+# B. Resumen
+
+## 1. Estadisticas basicas
+
+Validacion de los datos cargados
+```{r}
+head(datos)
+tail(datos)
+names(datos)
+```
+
+```{r}
+summary(datos)
+```
+
+```{r}
+str(datos)
+```
+Podemos observar que el dataset recibido posee 462 observaciones y 10 variables. De las cuales 2 son cualitativas y las otras 8 son cuantitativas.
+
+
+# 2. Histogramas
+
+```{r}
+hist(datos$sbp, main = "Histograma sbp")
+hist(datos$tobacco, main = "Histograma tobacco")
+hist(datos$ldl, main = "Histograma ldl")
+hist(datos$adiposity, , main = "Histograma adiposity")
+hist(datos$typea, main = "Histograma typea")
+hist(datos$obesity, main = "Histograma obesity")
+hist(datos$alcohol, main = "Histograma alcohol")
+hist(datos$age, main = "Histograma age")
+```
+
+En el caso los histogramas se pueden graficar todos los que su variable en el eje x sea cuantitativa. Es por eso que no se muestra la informacion de famhist y chd
+
+
+#### Observaciones
+
+sbp  
+La distribución tiende a concentrarse entre valores medios de 120–150
+
+tobacco  
+La mayoría de los individuos tienen un consumo bajo o moderado, mientras que unos pocos presentan valores muy altos.
+
+ldl  
+La mayor cantidad de valores se encuentran entre 3-6
+
+adiposity  
+Tiene una distribución relativamente simétrica
+
+typea  
+Se observa que esta equilibrada en la distribicion de los datos con la gran mayoria entre 40-70
+
+obesity  
+Su gran mayoria de datos se encuentran entre 20-30
+
+alcohol  
+Nos indica que en su gran mayoria casi ninguno bebe alcohol
+
+age  
+La distribución de edades es asimétrica hacia la izquierda. Tiene sentido ya que las enfermedades del corazón son más comunes en altas edades
+
+# 3. Boxplot
+
+```{r}
+boxplot(datos$sbp, main = "sbp")
+boxplot(datos$tobacco, main= "Tobacco")
+boxplot(datos$ldl, main= "ldl")
+boxplot(datos$adiposity, main="Adiposity")
+boxplot(datos$typea, main="typea")
+boxplot(datos$obesity, main="obesity")
+boxplot(datos$alcohol, main="Alcohol")
+boxplot(datos$age, main= "Age")
+```
+
+Al igual que el caso anterior si queremos ver solamente el boxplot de las variables caulitativas no se va a lograr esto debido a su tipo de dato. Sin embargo se podria observar en caso de que se quiera comparar con alguna cuantitaviva. Por ejemplo este caso
+
+```{r}
+boxplot(datos$age ~ datos$famhist,
+        main = "Edad según Antecedente Familiar",
+        xlab = "Antecedente Familiar",
+        ylab = "Edad")
+```
+
+#### Observaciones
+
+sbp  
+Se observan algunos valores altos fuera del rango normal, lo que indica personas con presión más elevada que el resto.
+
+tobacco  
+Hay varios valores extremos, quiere decir que algunas personas fuman mucho más que la mayoría
+
+ldl  
+Los valores se concentran en la parte media, con unos pocos casos de colesterol alto
+
+adiposity  
+La mayoría de los datos están en un rango estable, sin muchos valores fuera de lo normal
+
+typea  
+Los valores están bien distribuidos y no se observan puntos muy alejados.
+
+obesity  
+Los datos se agrupan cerca del promedio, aunque hay algunos casos con obesidad más alta
+
+alcohol  
+Se ven valores muy altos en pocos casos, lo que muestra que solo unos pocos tienen consumo excesivo.
+
+age  
+La mayoría de los participantes son adultos de mediana edad; no se observan edades extremas
+
+
+# 4. Barplot
+
+```{r}
+barplot(table(datos$famhist),main = "Frecuencia por Antecedente Familiar",
+        xlab = "Famhist",
+        ylab = "Frecuencia")
+
+barplot(table(datos$chd), main = "Frecuencia de Enfermedad Coronaria",
+        xlab = "CHD",
+        ylab = "Frecuencia")
+```
+
+#### Observaciones
+
+Frecuencia por Antecedente Familiar - Se observa que la mayoría de las personas no tienen antecedentes familiares de enfermedades cardíacas, aunque existe una parte importante que sí los presenta.
+
+Frecuencia de Enfermedad Coronaria - En este gráfico se aprecia que la cantidad de personas sin enfermedad coronaria es mayor que las que sí la padecen
+
+Se realiza en este caso solo esas 2 ya que este dataset en las variables famhist (antecedentes familiares) y chd (presencia de enfermedad coronaria) son las únicas categóricas.  
+
+Los plots de variables numericas no se logran interpretar bien de esta manera en este tipo de visualizacion ya que no se pueden comparar o agrupar.
+
+```{r}
+barplot(table(datos$tobacco))
+barplot(table(datos$sbp))
+barplot(table(datos$ldl))
+barplot(table(datos$adiposity))
+barplot(table(datos$typea))
+barplot(table(datos$obesity))
+barplot(table(datos$alcohol))
+barplot(table(datos$age))
+```
+
+
+
+# 5. QQline y qqnorm
+
+```{r}
+qqnorm(datos$age, main = "QQ Plot age")
+qqline(datos$age)
+
+qqnorm(datos$sbp, main = "QQ Plot sbp")
+qqline(datos$sbp)
+
+qqnorm(datos$tobacco, main = "QQ Plot tobacco")
+qqline(datos$tobacco)
+
+qqnorm(datos$ldl, main = "QQ Plot ldl")
+qqline(datos$ldl)
+
+qqnorm(datos$adiposity, main = "QQ Plot adiposity")
+qqline(datos$adiposity)
+
+qqnorm(datos$typea, main = "QQ Plot typea")
+qqline(datos$typea)
+
+qqnorm(datos$obesity, main = "QQ Plot obesity")
+qqline(datos$obesity)
+
+qqnorm(datos$alcohol, main = "QQ Plot alcogol")
+qqline(datos$alcohol)
+
+```
+
+#### Observaciones
+
+En la mayoría de las variables los puntos no siguen completamente la línea del QQplot, lo que significa que los datos no son totalmente normales.
+
+Algunas variables, como typea y obesity, se comportan un poco más estables, pero otras, como tobacco y alcohol, tienen valores muy dispersos.
+
+Adicionalmente se observa que los valores no crean la linea en S que deberia de existir sobre el qqline
+
+# Shapiro
+
+En este test si el p-value < 0.05, significa que la variable no sigue una distribución normal.
+
+```{r}
+shapiro.test(datos$sbp)
+shapiro.test(datos$tobacco)
+shapiro.test(datos$ldl)
+shapiro.test(datos$adiposity)
+shapiro.test(datos$typea)
+shapiro.test(datos$obesity)
+shapiro.test(datos$alcohol)
+shapiro.test(datos$age)
+```
+
+
+
+
